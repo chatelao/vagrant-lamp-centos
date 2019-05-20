@@ -1,9 +1,12 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "centos/7"
+  config.vm.box = "bento/centos-7.6"
 
   config.vm.hostname = "devbox.lan"
   config.vm.network :private_network, ip: "10.10.0.20"
   config.ssh.forward_agent = true
+
+  config.vm.network "forwarded_port", guest: 80, host: 8200
+  # config.vm.network "forwarded_port", guest: 80, host: 8000
 
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -16,6 +19,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".",  "/vagrant", id: "vagrant-root", disabled: true
   config.vm.synced_folder "./provision", "/opt/provision", nfs: true
   config.vm.synced_folder "./webroot", "/opt/webroot", nfs: true
+
   # other projects
   #config.vm.synced_folder "../../path-to-some-project", "/opt/some-project"
   #config.vm.synced_folder "../../../pixi", "/opt/pixi"
@@ -48,14 +52,14 @@ Vagrant.configure("2") do |config|
     s.path = "provision/phpmyadmin.sh"
   end
 
-  config.vm.provision "shell" do |s|
-    s.name = "install craftcms"
-    s.path = "provision/craftcms.sh"
-  end
+  # config.vm.provision "shell" do |s|
+  #   s.name = "install craftcms"
+  #   s.path = "provision/craftcms.sh"
+  # end
 
-  config.vm.provision "shell" do |s|
-    s.name = "install django"
-    s.path = "provision/django.sh"
-  end
+  # config.vm.provision "shell" do |s|
+  #   s.name = "install django"
+  #   s.path = "provision/django.sh"
+  # end
 
 end
